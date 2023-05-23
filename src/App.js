@@ -19,7 +19,7 @@ function Home() {
 
     const activeClaimCondition = useActiveClaimConditionForWallet(nftDrop,address);
 
-    console.log("activeClaimCondition",activeClaimCondition?.data.currencyMetadata.displayValue);
+    console.log("activeClaimCondition",activeClaimCondition?.data?.currencyMetadata.displayValue);
 
     console.log("unclaimedSupply",Number(unclaimedSupply.data));
 
@@ -38,18 +38,18 @@ function Home() {
             alt="Emoji faces NFT Preview"
           />
         </div>
-​
+
         <div className="mintCompletionArea">
             <div className="mintAreaLeft">
               <h2>Total Minted</h2>
             </div>
-​
+
             <div className="mintAreaRight">
                 <p>
                   <b>{Number(claimedSupply.data)}/{Number(unclaimedSupply.data) + Number(claimedSupply.data)} </b>
                 </p>
             </div>
-​
+
             <div>
               <h2>Quantity</h2>
               <div className="quantityContainer">
@@ -69,14 +69,26 @@ function Home() {
               </div>
             </div>
         </div>
-​
+
         <div className="mintContainer">
+          {Number(unclaimedSupply.data) + Number(claimedSupply.data) == Number(claimedSupply.data) ?
+            <div>
+              <h2>SOLD OUT!!!</h2>
+              </div>:
           <Web3Button
             contractAddress={nftDropContractAddress}
             action={(contract) => contract.erc721.claim(quantity)}
+            onError={(err) => {
+              alert("Error minting NFTs");
+            }}
+            onSuccess={() => {
+              alert("Succesfully minted NFTs");
+            }}
           >
-             Mint NFT ({Number(activeClaimCondition?.data.currencyMetadata.displayValue) * quantity}{activeClaimCondition?.data.currencyMetadata.symbol})
+             Mint NFT ({Number(activeClaimCondition?.data?.currencyMetadata.displayValue) * quantity}
+             {" "}{activeClaimCondition?.data?.currencyMetadata.symbol});
           </Web3Button>
+          }
         </div>
       </main>
     </div>
