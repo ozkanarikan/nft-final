@@ -3,6 +3,9 @@ import "./styles/Home.css";
 import { useContract, useContractWrite, useAddress, useClaimedNFTSupply, useUnclaimedNFTSupply, useActiveClaimConditionForWallet } from "@thirdweb-dev/react";
 import preview from "./images/preview.gif"
 import {useState} from "react";
+import Swal from 'sweetalert2';
+
+
 const nftDropContractAddress = "0x8e6D8F6E55C36406D32d32Bd2560522aEFa638d2";
 
 function Home() {
@@ -71,18 +74,28 @@ function Home() {
         </div>
 
         <div className="mintContainer">
-          {Number(unclaimedSupply.data) + Number(claimedSupply.data) == Number(claimedSupply.data) ?
-            <div>
-              <h2>SOLD OUT!!!</h2>
+          {Number(unclaimedSupply?.data) + Number(claimedSupply?.data) == Number(claimedSupply.data) ?
+              <div>
+                <h2>SOLD OUT!!!</h2>
               </div>:
           <Web3Button
             contractAddress={nftDropContractAddress}
             action={(contract) => contract.erc721.claim(quantity)}
             onError={(err) => {
-              alert("Error minting NFTs");
+              Swal.fire({
+                title: 'Error!',
+                text: 'Do you want to continue',
+                icon: 'error',
+                confirmButtonText: 'Cool'
+              });
             }}
             onSuccess={() => {
-              alert("Succesfully minted NFTs");
+              Swal.fire({
+                title: 'Success',
+                text: 'Thank you',
+                icon: 'success',
+                confirmButtonText: 'Cool'
+              });  
             }}
           >
              Mint NFT ({Number(activeClaimCondition?.data?.currencyMetadata.displayValue) * quantity}
